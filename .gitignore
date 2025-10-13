@@ -1,4 +1,32 @@
+# Data files - exclude entire data directory
+data/
+
+# Old CSV references (keeping for compatibility)
 train.csv
 AI.DataLab-Fall25.csv
 AI.DataLab-Fall25.csv.zip
+
+# Python cache files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+
+# System files
 .DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Jupyter Notebook
+.ipynb_checkpoints

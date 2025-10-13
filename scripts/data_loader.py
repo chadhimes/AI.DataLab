@@ -33,8 +33,15 @@ def height_to_inches(height_str):
     except (ValueError, TypeError, AttributeError):
         return np.nan
 
-def load_and_clean_data(file_path="train.csv"):
+def load_and_clean_data(file_path=None):
     """Load and clean the dataset."""
+    import os
+    
+    # Set default file path relative to the script location
+    if file_path is None:
+        script_dir = os.path.dirname(os.path.abspath(__file__))
+        file_path = os.path.join(script_dir, "..", "data", "train.csv")
+    
     df = pd.read_csv(file_path, low_memory=False)
     
     # Convert height to inches (with error handling for corrupted data)
