@@ -52,7 +52,11 @@ def plot_player_coordinates(play_id):
     ax.set_xlabel('X Coordinate')
     ax.set_ylabel('Y Coordinate')
     plt.grid(True)
+    plt.xlim(0,100)
+    plt.ylim(0,60)
     plt.show()
-    
+
+playIDS = df["PlayId"]  
+print(playIDS[3])
 # Example usage
-plot_player_coordinates(play_id=20170907000118)  # Replace with a valid PlayId from your dataset
+plot_player_coordinates(play_id=20170907001488)  # Replace with a valid PlayId from your dataset
