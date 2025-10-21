@@ -9,11 +9,16 @@ def team_tint_color(base_color, team_type):
     - 'defense' → bluish tint
     """
     base_color = np.array(base_color[:3])  # RGB only
-    if team_type == "offense":
-        tint = np.array([1.0, 0.4, 0.4])  # red tint
+    if team_type == "home":
+        # Strong blue tint
+        tint = np.array([0.1, 0.3, 1.0])
+    elif team_type == "away":
+        # Strong red tint
+        tint = np.array([1.0, 0.1, 0.1])
     else:
-        tint = np.array([0.4, 0.6, 1.0])  # blue tint
-    
-    # Blend: 70% speed color, 30% tint
-    blended = 0.7 * base_color + 0.3 * tint
+        # fallback: no tint
+        tint = base_color
+
+    # Blend: 50% base color, 50% tint for more obvious effect
+    blended = 0.5 * base_color + 0.5 * tint
     return np.clip(blended, 0, 1)
