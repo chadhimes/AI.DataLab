@@ -60,8 +60,8 @@ def _get_first_down_info(play_df, ball_side):
 def plot_player_coordinates(
     play_id,
     show_vectors=True,
-    vec_scale=0.35,      # arrow length multiplier (smaller)
-    speed_cap=18.0,
+    vec_scale=40.0,      # arrow length multiplier (increase to extend stems)
+    speed_cap=9.41,      # observed maximum speed in dataset (yds/s)
     markersize=6,        # small dots
     edge_offset=0.7,     # yards to start arrow away from dot center (≈ dot radius)
     frame_offset_after_handoff=2,
@@ -97,7 +97,7 @@ def plot_player_coordinates(
     rusher_id = play_df['NflIdRusher'].iloc[0] if 'NflIdRusher' in play_df.columns else None
     has_nflid = 'NflId' in play_df.columns
 
-    xs, ys, us, vs, cols = [], [], [], [], []
+    # we'll draw arrows directly per-player so lengths reflect computed L
     n_with_dir = 0
 
     for _, row in play_df.iterrows():
@@ -130,24 +130,34 @@ def plot_player_coordinates(
                 continue
             ux, uy = dx / mag, dy / mag
 
-            L = vec_scale * s_clamped
+            # Linear mapping: arrow length proportional to speed
+            # L will be vec_scale when s_clamped == speed_cap
+            L = vec_scale * (s_clamped / max(speed_cap, 1e-6))
+            # Minimum visible length
+            L = max(L, 3.0)
             x0 = x + ux * edge_offset
             y0 = y + uy * edge_offset
 
-            xs.append(x0)
-            ys.append(y0)
-            us.append(ux * L)
-            vs.append(uy * L)
-            cols.append(color)
+            dx = ux * L
+            dy = uy * L
+            # draw arrow: thin shaft (width), small head (head_width/head_length)
+            shaft_width = 0.06  # in data units (yards) - thin line
+            head_w = 0.6
+            head_l = 1.2
+            ax.arrow(
+                x0, y0, dx, dy,
+                length_includes_head=True,
+                linewidth=0.8,
+                width=shaft_width,
+                head_width=head_w,
+                head_length=head_l,
+                fc=color, ec=color,
+                alpha=0.95,
+                zorder=9
+            )
+        # (speed labels removed) 
 
-    if show_vectors and xs:
-        Q = ax.quiver(
-            xs, ys, us, vs,
-            angles='xy', scale_units='xy', scale=1,
-            width=0.004, headwidth=3.2, headlength=4.2,
-            pivot='tail',
-            color=cols, zorder=6
-        )
+    # no quiver aggregation; arrows drawn inline above
         # ax.quiverkey(Q, X=0.88, Y=1.03, U=vec_scale*5, label='≈5 yds/s', labelpos='E')
 
     ttl = f'Player Positions for PlayId: {play_id}'
@@ -168,7 +178,7 @@ if __name__ == "__main__":
     plot_player_coordinates(
         play_id=20170907000118,
         show_vectors=True,
-        vec_scale=0.30,
+        vec_scale=40.0,
         markersize=6,
         edge_offset=0.7
     )
