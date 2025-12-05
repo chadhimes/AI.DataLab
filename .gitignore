@@ -6,6 +6,24 @@ train.csv
 AI.DataLab-Fall25.csv
 AI.DataLab-Fall25.csv.zip
 
+# Image folders
+out_all_plays/
+gradcam_mobilenetv3_hybrid_snap_focal_20ep/
+gradcam_out/
+
+# Logs and checkpoints
+checkpoints_*/
+checkpoints*/
+checkpoints/
+*.pth
+*.pt
+*.ckpt
+*.onnx
+*.npz
+*.npy
+*.tar
+*.zip
+
 # Python cache files
 __pycache__/
 *.pyc
@@ -28,5 +46,18 @@ Thumbs.db
 *.swp
 *.swo
 
+*.yaml
+*.sh
+
 # Jupyter Notebook
 .ipynb_checkpoints
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Experiment logs (future-proof)
+runs/
+tb_logs/
+wandb/
