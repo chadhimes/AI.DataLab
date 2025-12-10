@@ -94,6 +94,8 @@ def main():
     ap.add_argument('--device', type=str, default='cpu')
     ap.add_argument('--img-size', type=int, default=224)
     ap.add_argument('--head', type=str, choices=['regression', 'classification'], default='regression')
+    ap.add_argument('--layer-index', type=int, default=-1,
+                    help='Index into backbone.features to use as target layer (negative allowed)')
     ap.add_argument('--limit', type=int, default=50)
     ap.add_argument('--small', action='store_true')
     ap.add_argument('--pretrained', action='store_true')
@@ -120,8 +122,13 @@ def main():
     model.load_state_dict(state)
     model.eval()
 
-    # Target layer: last conv block of MobileNetV3-small
-    target_layer = model.backbone.features[-1]
+    # Target layer selection
+    li = args.layer_index
+    if li < 0:
+        li = len(model.backbone.features) + li
+    # clamp
+    li = max(0, min(li, len(model.backbone.features) - 1))
+    target_layer = model.backbone.features[li]
     cam = GradCAM(model, target_layer)
 
     transform = build_eval_transform(args.img_size)

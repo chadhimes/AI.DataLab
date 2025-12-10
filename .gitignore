@@ -8,8 +8,6 @@ AI.DataLab-Fall25.csv.zip
 
 # Image folders
 out_all_plays/
-gradcam_mobilenetv3_hybrid_snap_focal_20ep/
-gradcam_out/
 
 # Logs and checkpoints
 checkpoints_*/
